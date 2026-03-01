@@ -3,10 +3,17 @@ package medium;
 import java.util.*;
 
 public class TimeBasedKeyValueStore {
-    Map<String,TreeMap<Integer, String>> map;
+    Map<String,List<Pair>> map;
 
+    //earlier implemented using tree map. but since time stamps are in increasing order binary search will be easy on array list.
     public static void main(String args[]){
-
+        TimeBasedKeyValueStore t = new TimeBasedKeyValueStore();
+        t.set("foo","bar", 1);
+        System.out.println(t.get("foo", 1));
+        System.out.println(t.get("foo", 3));
+        t.set("foo","bar2", 4);
+        System.out.println(t.get("foo", 4));
+        System.out.println(t.get("foo", 5));
     }
 
     public TimeBasedKeyValueStore() {
@@ -14,34 +21,39 @@ public class TimeBasedKeyValueStore {
     }
 
     public void set(String key, String value, int timestamp) {
+        Pair p = new Pair();
+        p.value = value;
+        p.timeStamp = timestamp;
         if(!map.containsKey(key)) {
-            TreeMap<Integer, String> m = new TreeMap<>();
-            m.put(timestamp, value);
-            map.put(key, m);
+            List<Pair> pairList = new ArrayList<>();
+            pairList.add(p);
+            map.put(key, pairList);
         } else
-            map.get(key).put(timestamp, value);
+            map.get(key).add(p);
 
     }
 
     public String get(String key, int timestamp) {
         if (map.get(key) == null)
             return "";
-        TreeMap<Integer, String> m = map.get(key);
-        if(m.get(timestamp) == null) {
-            if(timestamp > m.lastEntry().getKey())
-                return m.lastEntry().getValue();
-            else if(timestamp < m.firstEntry().getKey())
-                return "";
-            else {
-                int largestTimeStamp = 0;
-                for(Map.Entry<Integer, String> e : m.entrySet())
-                    if(e.getKey()<timestamp)
-                        largestTimeStamp = e.getKey();
-                    else
-                        break;
-                return m.get(largestTimeStamp);
+        List<Pair> listPair = map.get(key);
+        int left = 0;
+        int right = listPair.size()-1;
+        String value = "";
+        while(left<=right){
+            int mid = (left+right)/2;
+            if(listPair.get(mid).timeStamp <= timestamp){
+                value = listPair.get(mid).value;
+                left = mid+1;
+            } else if(listPair.get(mid).timeStamp>timestamp){
+                right = mid-1;
             }
         }
-        return m.get(timestamp);
+        return value;
+    }
+
+    class Pair{
+        String value;
+        int timeStamp;
     }
 }
