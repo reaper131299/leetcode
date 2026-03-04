@@ -1,0 +1,43 @@
+package leetcode.hard;
+
+public class MedianOfTwoSortedArrays {
+
+    public static void main(String[] args){
+        MedianOfTwoSortedArrays m = new MedianOfTwoSortedArrays();
+        m.findMedianSortedArrays( new int[]{6,7,8}, new int[]{1,2,3,4,5});
+
+    }
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums2.length<nums1.length)
+            return findMedianSortedArrays(nums2,nums1);
+
+        int m = nums1.length;
+        int n = nums2.length;
+
+        int low = 0;    // left pointer
+        int high = m;   // right pointer
+
+        while(low<=high){
+            int i = (low+high)/2;  //elements from nums1
+            int j = ((m+n+1)/2) - i;  //elements from nums2
+
+            int left1 = i == 0? Integer.MIN_VALUE : nums1[i-1];
+            int right1 = i == m? Integer.MAX_VALUE : nums1[i];
+
+            int left2 = j==0? Integer.MIN_VALUE:nums2[j-1];
+            int right2 = j==n? Integer.MAX_VALUE:nums2[j];
+
+            if(left1<=right2 && left2<=right1)
+                if((m+n)%2 == 1)
+                    return Math.max(left1, left2);
+                else
+                    return (Math.max(left1, left2) + Math.min(right1,right2))/2.0;
+            else if(left1>right2)
+                high = i-1;
+            else if (left2>nums1[i])
+                low = i+1;
+        }
+        return 0;
+    }
+}
