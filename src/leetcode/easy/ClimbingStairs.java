@@ -4,36 +4,48 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ClimbingStairs {
+    int[] minSteps;
 
-    ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(0,1,2,3));
-
-    public static void main(String[] args) {
+    public static void main(String args[]){
         ClimbingStairs c = new ClimbingStairs();
-        System.out.println(c.climbStairs(3));
+        c.climbStairs(6);
     }
 
-    //using dp efificient but increases space complexity because os extra array
 //    public int climbStairs(int n) {
-//        int count = 0;
-//        if (arr.size() > n) count = arr.get(n);
-//        else {
-//            count = climbStairs(n - 1) + climbStairs(n - 2);
-//            arr.add(count);
+//        minSteps = new int[n+1];
+//        Arrays.fill(minSteps, -1);
+//        return climbStairsUtil(n);
+//    }
+//
+//    public int climbStairsUtil(int n) {
+//        if(n<=3 ) {
+//            minSteps[n] = n;
+//            return n;
 //        }
-//        return count;
+//
+//        if(minSteps[n] != -1) return minSteps[n];
+//
+//        int steps = climbStairsUtil(n-1) + climbStairsUtil(n-2);
+//
+//        minSteps[n] = steps;
+//
+//        return steps;
+//
 //    }
 
-    //efficient and uses very less space.
     public int climbStairs(int n) {
         if(n<=3) return n;
-        int prev1 = 3;
-        int prev2 = 2;
-        int cur = 0;
-        for(int i = 3; i<n; i++){
-            cur = prev1 +prev2;
-            prev2 = prev1;
-            prev1 = cur;
+
+        int[] totalWays = new int[n+1];
+        totalWays[0] = 0;
+        totalWays[1] = 1;
+        totalWays[2] = 2;
+        totalWays[3] = 3;
+
+        for(int i = 4; i<=n; i++){
+            totalWays[i] = totalWays[i-1]+totalWays[i-2];
         }
-        return cur;
+
+        return totalWays[n];
     }
 }

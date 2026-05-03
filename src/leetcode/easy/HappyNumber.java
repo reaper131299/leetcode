@@ -7,24 +7,26 @@ public class HappyNumber  {
     }
 
     public boolean isHappy(int n) {
-        int slow;
-        int fast;
-        slow = getSum(n);
-        fast = getSum(getSum(n));
-        while(slow != 1 && fast !=1 && slow != fast){
+        int slow = getSum(n);
+        int fast = getSum(getSum(n));
+
+        while(slow != 1 && fast !=1 && slow != fast) {
             slow = getSum(slow);
             fast = getSum(getSum(fast));
         }
-        return slow == 1 || fast == 1;
 
+        return slow == 1 || fast == 1;
     }
 
-    int getSum(int n){
+    private int getSum(int n) {
         int sum = 0;
-        while(n!=0){
-            sum = (int)(sum + Math.pow((n%10),2));
+
+        while (n != 0) {
+            int r = n%10;
+            sum = sum + r*r;
             n = n/10;
         }
+
         return sum;
     }
 }

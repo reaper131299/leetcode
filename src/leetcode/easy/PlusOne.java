@@ -11,32 +11,20 @@ public class PlusOne {
     }
 
     public int[] plusOne(int[] digits) {
-        int carry;
-        int num = digits[digits.length - 1];
-        int start = digits.length - 2;
-        if (num > 8) {
-            carry = 1;
-            digits[digits.length - 1] =0;
-        } else {
-            digits[digits.length - 1] = digits[digits.length - 1] + 1;
-            return digits;
+        int carry = 1;
+        for(int i = digits.length-1; i>=0; i--) {
+            int sum = digits[i]+carry;
+            digits[i] = (sum)%10;
+            carry = sum/10;
         }
 
-        while (carry != 0 && start >=0) {
-            if (digits[start] > 8) {
-                digits[start] =0;
-            } else {
-                carry = 0;
-                digits[start] = digits[start] + 1;
-            }
-            start--;
-        }
         if(carry == 1) {
-            int[] newarr = new int[digits.length + 1];
-            newarr[0] = 1;
-            System.arraycopy(digits, 0, newarr, 1, newarr.length - 1);
-            return newarr;
+            int[] newDigits = new int[digits.length+1];
+            newDigits[0] = carry;
+            System.arraycopy(digits, 0, newDigits, 1, digits.length);
+            return newDigits;
         }
+
         return digits;
     }
 }
